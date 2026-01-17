@@ -1553,13 +1553,13 @@ html {
 }
 
 .order-status-header .status-text {
-    font-weight: 600;
-    color: #5c8f61; /* Hijau untuk status 'diantar' */
-    font-size: 1.05rem;
+    color: #495057;
+    font-weight: bold;
+    font-size: 1.1rem;
 }
 
 .order-status-header.completed-status .status-text {
-    color: #a0a0a0; /* Abu-abu untuk status 'selesai' */
+    color: #a0a0a0;
 }
 
 .order-status-header .status-arrow {

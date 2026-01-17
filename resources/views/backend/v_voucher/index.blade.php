@@ -7,15 +7,29 @@
             {{-- Header & Tombol Aksi --}}
             <div class="card mb-4">
                 <div class="card-body d-flex justify-content-between align-items-center">
-                    <ul class="breadcrumb">
+
+                    {{-- BAGIAN KIRI: Breadcrumb --}}
+                    <ul class="breadcrumb mb-0">
                         <li class="breadcrumb-item">Dashboard</li>
-                        <li class="breadcrumb-item" aria-current="page">Kelola Voucher</li>
+                        <li class="breadcrumb-item active" aria-current="page">Kelola Voucher</li>
                     </ul>
 
-                    {{-- Tombol Tambah Voucher (Ganti dari Export ke Tambah) --}}
-                    <a href="{{ route('admin.voucher.create') }}" class="btn btn-primary">
-                        <i class="ti ti-plus"></i> Buat Voucher Baru
-                    </a>
+                    {{-- BAGIAN KANAN: Group Tombol --}}
+                    {{-- Kita bungkus pakai div & gap-2 agar tombol menempel di kanan & ada jarak --}}
+                    <div class="d-flex gap-2">
+
+                        {{-- Tombol Cetak (Hijau) --}}
+                        <a href="{{ route('admin.voucher.formcetak') }}" class="btn btn-success">
+                            <i class="ti ti-printer me-2"></i> Cetak Laporan
+                        </a>
+
+                        {{-- Tombol Tambah (Biru) --}}
+                        <a href="{{ route('admin.voucher.create') }}" class="btn btn-primary">
+                            <i class="ti ti-plus me-2"></i> Buat Voucher Baru
+                        </a>
+
+                    </div>
+
                 </div>
             </div>
 

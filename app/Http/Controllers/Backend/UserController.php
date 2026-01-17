@@ -13,7 +13,6 @@ class UserController extends Controller
 {
     public function index()
     {
-        // Ambil semua user, urutkan admin dulu baru user biasa
         $users = User::orderBy('role', 'asc')->latest()->get();
         return view('backend.v_user.index', compact('users'));
     }
@@ -25,18 +24,19 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nama'     => 'required|string|max:255',
-            'email'    => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
+            'email'    => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8',
             'role'     => 'required|in:admin,customer',
-            'hp'       => 'nullable|numeric',
+            'hp'       => 'nullable|numeric|digits_between:10,15',
+            'alamat'   => 'nullable|string',
         ]);
 
         User::create([
             'nama'     => $request->nama,
             'email'    => $request->email,
-            'password' => Hash::make($request->password), // Enkripsi Password
+            'password' => Hash::make($request->password),
             'role'     => $request->role,
             'hp'       => $request->hp,
             'alamat'   => $request->alamat,
@@ -58,10 +58,12 @@ class UserController extends Controller
         $request->validate([
             'nama'  => 'required|string|max:255',
             'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
-            'role'     => 'required|in:admin,customer',
+            'role'  => 'required|in:admin,customer',
+            'password' => 'nullable|string|min:8',
+            'hp'     => 'nullable|numeric|digits_between:10,15',
+            'alamat' => 'nullable|string',
         ]);
 
-        // Setup data yang mau diupdate
         $data = [
             'nama'   => $request->nama,
             'email'  => $request->email,
@@ -70,7 +72,6 @@ class UserController extends Controller
             'alamat' => $request->alamat,
         ];
 
-        // Cek apakah password diisi? Jika ya, update. Jika kosong, biarkan password lama.
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
         }
@@ -82,14 +83,41 @@ class UserController extends Controller
 
     public function destroy($id)
     {
-        // Cegah menghapus diri sendiri
         if (Auth::id() == $id) {
-        return back()->with('error', 'Anda tidak bisa menghapus akun sendiri!');
-    }
+            return back()->with('error', 'Anda tidak bisa menghapus akun sendiri!');
+        }
 
         $user = User::findOrFail($id);
         $user->delete();
 
         return back()->with('success', 'User berhasil dihapus');
+    }
+
+    public function formCetak()
+    {
+        $judul = "Form Cetak Laporan User";
+        return view('backend.v_user.form', compact('judul'));
+    }
+
+    public function cetak(Request $request)
+    {
+        $request->validate([
+            'tanggal_awal'  => 'required|date',
+            'tanggal_akhir' => 'required|date|after_or_equal:tanggal_awal',
+        ]);
+
+        $tanggalAwal  = $request->tanggal_awal;
+        $tanggalAkhir = $request->tanggal_akhir;
+
+
+        $cetak = User::whereDate('created_at', '>=', $tanggalAwal)
+            ->whereDate('created_at', '<=', $tanggalAkhir)
+            ->orderBy('role', 'asc')
+            ->orderBy('nama', 'asc')
+            ->get();
+
+        $judul = "Laporan Data Pengguna (User)";
+
+        return view('backend.v_user.cetak', compact('cetak', 'judul', 'tanggalAwal', 'tanggalAkhir'));
     }
 }

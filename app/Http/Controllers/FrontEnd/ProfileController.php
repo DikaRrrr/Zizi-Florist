@@ -12,7 +12,6 @@ class ProfileController extends Controller
 {
     public function index()
     {
-        // Ambil data user yang sedang login
         $user = Auth::user();
 
         return view('frontend.v_profile.index', compact('user'));
@@ -29,17 +28,14 @@ class ProfileController extends Controller
 
         if ($request->hasFile('avatar')) {
 
-            // Hapus foto lama jika ada (dan bukan foto bawaan)
             if ($user->avatar && Storage::exists('public/' . $user->avatar)) {
                 Storage::delete('public/' . $user->avatar);
             }
 
-            // Simpan foto baru
             $path = $request->file('avatar')->store('avatars', 'public');
 
-            // Update database
             $user->avatar = $path;
-            $user->save(); // Sekarang ini pasti berhasil!
+            $user->save();
         }
 
         return back()->with('success', 'Foto profil berhasil diperbarui!');

@@ -13,27 +13,17 @@ return new class extends Migration
     {
         Schema::create('pesanan', function (Blueprint $table) {
             $table->id();
-
-            // Terhubung ke tabel Users
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-
-            // --- INFO PENGIRIMAN ---
-            $table->string('nama_penerima');    // Nama Penerima
-            $table->string('hp_penerima');   // No HP Penerima
-            $table->text('alamat_penerima');   // Alamat Lengkap
-
-            // --- INFO KEUANGAN (PENTING!) ---
-            $table->integer('subtotal');         // Harga total barang SEBELUM diskon & ongkir
-
-            $table->string('kode_voucher')->nullable();      // Kode voucher yg dipakai (misal: ZIZI10)
-            $table->integer('jumlah_diskon')->default(0); // Potongan harga dalam Rupiah (Snapshot)
+            $table->string('nama_penerima'); 
+            $table->string('hp_penerima'); 
+            $table->text('alamat_penerima');  
+            $table->integer('subtotal');        
+            $table->string('kode_voucher')->nullable();      
+            $table->integer('jumlah_diskon')->default(0); 
             $table->integer('ongkir');
-
-            $table->integer('total_akhir');      // Harga AKHIR yang harus dibayar user
-
-            // --- STATUS & TRACKING ---
+            $table->integer('total_akhir');      
             $table->enum('status', ['Belum Dibayar', 'Menunggu Konfirmasi', 'Pembayaran Ditolak', 'Diproses', 'Dibayar', 'Dikirim', 'Selesai', 'Dibatalkan'])->default('Belum Dibayar');
-            $table->string('resi')->nullable(); // No Resi JNE/J&T
+            $table->string('resi')->nullable(); 
             $table->boolean('sudah_dirating')->default(false);
             $table->timestamps();
         });

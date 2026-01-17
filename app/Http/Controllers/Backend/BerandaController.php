@@ -16,10 +16,9 @@ class BerandaController extends Controller
         $totalProduk = Produk::count();
 
         // 2. Hitung User (Hanya role customer/user)
-        $totalUser = User::where('role', 'user')->count(); // Sesuaikan 'user' atau 'customer' sesuai database kamu
+        $totalUser = User::where('role', 'customer')->count();
 
         // 3. Hitung Pendapatan (Hanya status yang uangnya sudah cair)
-        // Kita gunakan whereIn untuk memilih banyak status sekaligus
         $totalPendapatan = Pesanan::whereIn('status', ['Dibayar', 'Diproses', 'Dikirim', 'Selesai'])
             ->sum('total_akhir');
 
@@ -29,7 +28,6 @@ class BerandaController extends Controller
         // 5. Hitung Pesanan Perlu Diproses (Pending)
         $perluDiproses = Pesanan::where('status', 'Menunggu Konfirmasi')->count();
 
-        // Kirim semua variabel ke View
         return view('backend.v_beranda.index', compact(
             'totalProduk',
             'totalUser',

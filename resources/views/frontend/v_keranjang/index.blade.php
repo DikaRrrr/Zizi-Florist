@@ -14,14 +14,10 @@
 
                     {{-- LOOPING DATA KERANJANG --}}
                     @foreach (session('cart') as $id => $details)
-                        {{-- ========================================== --}}
-                        {{-- PERBAIKAN: LOGIKA HITUNG HARGA ADA DISINI --}}
-                        {{-- ========================================== --}}
                         @php
                             $subtotalItem = $details['price'] * $details['quantity'];
                             $totalBelanja += $subtotalItem;
                         @endphp
-                        {{-- ========================================== --}}
 
                         <div class="cart-item" data-id="{{ $id }}" style="position: relative; padding-right: 30px;">
 
@@ -63,7 +59,6 @@
                                 <span class="item-qty-value">{{ $details['quantity'] }}</span>
 
                                 {{-- TOMBOL TAMBAH --}}
-                                {{-- WAJIB ADA: data-id="{{ $id }}" --}}
                                 <button class="qty-btn plus-btn change-qty" data-action="plus"
                                     data-id="{{ $id }}">
                                     <i class="fa-solid fa-plus"></i>
@@ -91,7 +86,6 @@
                     {{-- SUBTOTAL --}}
                     <div class="summary-line">
                         <span>Subtotal ({{ count(session('cart')) }} Item)</span>
-                        {{-- Pastikan variabel $totalBelanja dikirim dari controller --}}
                         <span id="subtotalDisplay">Rp {{ number_format($totalBelanja, 0, ',', '.') }}</span>
                     </div>
 

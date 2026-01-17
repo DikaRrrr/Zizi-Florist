@@ -13,16 +13,13 @@ return new class extends Migration
     {
         Schema::create('voucher', function (Blueprint $table) {
             $table->id();
-            $table->string('kode')->unique(); // Kode Voucher (misal: ZIZIHEMAT)
-            $table->enum('tipe', ['percent', 'fixed']); // Jenis: % atau Potongan Harga Tetap
-            $table->integer('nilai'); // Nilainya (misal: 10 untuk 10%, atau 5000 untuk Rp 5.000)
-
-            // Batasan (Optional tapi penting)
-            $table->integer('minimal_pembelian')->default(0); // Minimal belanja Rp berapa baru bisa pakai
-            $table->date('tanggal_mulai')->nullable(); // Berlaku mulai kapan
-            $table->date('tanggal_selesai')->nullable();   // Kadaluarsa kapan
-
-            $table->boolean('is_active')->default(true); // Bisa dimatikan manual oleh admin
+            $table->string('kode')->unique(); 
+            $table->enum('tipe', ['percent', 'fixed']); 
+            $table->integer('nilai'); 
+            $table->integer('minimal_pembelian')->default(0); 
+            $table->date('tanggal_mulai')->nullable(); 
+            $table->date('tanggal_selesai')->nullable();   
+            $table->boolean('is_active')->default(true); 
             $table->timestamps();
         });
     }

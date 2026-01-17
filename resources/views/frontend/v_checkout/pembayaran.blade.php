@@ -32,7 +32,7 @@
                                                     <span class="fw-bold text-dark">- {{ $item->no_rekening }}</span>
                                                     <br>
                                                     {{-- Atas Nama --}}
-                                                    <small class="text-muted">a.n. {{ $item->atas_nama }}</small>
+                                                    <small class="text-muted" style="text-transform: uppercase">a.n. {{ $item->atas_nama }}</small>
                                                 </div>
 
                                                 {{-- (Opsional) Tombol Copy kecil agar user mudah menyalin --}}

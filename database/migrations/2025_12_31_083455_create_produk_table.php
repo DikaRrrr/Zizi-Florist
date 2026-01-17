@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('produk', function (Blueprint $table) {
             $table->id();
             $table->string('nama_produk');
-            $table->string('slug')->unique(); // URL ramah SEO
+            $table->string('slug')->unique();
             $table->text('deskripsi');
-            $table->integer('harga'); // Harga Asli
+            $table->integer('harga');
             $table->integer('stok')->default(10);
             $table->integer('terjual')->default(0);
-            $table->string('foto')->nullable(); // Gambar Utama
+            $table->string('foto')->nullable();
             $table->timestamps();
         });
     }

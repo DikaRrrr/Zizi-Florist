@@ -11,12 +11,10 @@ class Admin
 {
     public function handle(Request $request, Closure $next): Response
     {
-        // Cek: Sudah Login? DAN Role-nya Admin?
         if (Auth::check() && Auth::user()->role === 'admin') {
-            return $next($request); // Silakan lewat
+            return $next($request);
         }
 
-        // Kalau bukan, tendang ke Home
         return redirect('/')->with('error', 'Anda bukan Admin!');
     }
 }

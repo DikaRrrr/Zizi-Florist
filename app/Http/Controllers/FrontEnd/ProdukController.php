@@ -10,7 +10,6 @@ class ProdukController extends Controller
 {
     public function show($id)
     {
-        // Cari produk berdasarkan ID, kalau gak ketemu muncul error 404
         $product = Produk::with(['rating.user'])->findOrFail($id);
 
         $avgRating = $product->rating->avg('rating') ?? 0;

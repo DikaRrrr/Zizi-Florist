@@ -4,13 +4,23 @@
     <div class="row">
         <div class="col-12">
 
-            {{-- Header & Tombol Tambah --}}
-            <div class="card mb-4">
-                <div class="card-body d-flex justify-content-between align-items-center">
-                    <ul class="breadcrumb">
-                        <li class="breadcrumb-item">Dashboard</a></li>
-                        <li class="breadcrumb-item" aria-current="page">Produk</li>
-                    </ul> <a href="{{ route('admin.produk.create') }}" class="btn btn-primary">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                {{-- BAGIAN KIRI: Breadcrumb --}}
+                <ul class="breadcrumb mb-0">
+                    <li class="breadcrumb-item">Dashboard</li>
+                    <li class="breadcrumb-item active" aria-current="page">Produk</li>
+                </ul>
+
+                {{-- BAGIAN KANAN: Tombol Action --}}
+                <div>
+                    {{-- Tombol Cetak Laporan (Merah) --}}
+                    {{-- target="_blank" agar membuka tab baru saat dicetak --}}
+                    <a href="{{ route('admin.produk.formcetak') }}" class="btn btn-success me-2">
+                        <i class="ti ti-printer"></i> Cetak Laporan
+                    </a>
+
+                    {{-- Tombol Tambah Produk (Biru) --}}
+                    <a href="{{ route('admin.produk.create') }}" class="btn btn-primary">
                         <i class="ti ti-plus"></i> Tambah Produk
                     </a>
                 </div>

@@ -41,136 +41,88 @@ class DatabaseSeeder extends Seeder
             'alamat' => 'Jl. Mawar No. 10, Bogor',
         ]);
 
-        // Daftar Nama Bunga agar terlihat nyata
-        $flowerNames = [
-            'Mawar Merah',
-            'Mawar Putih',
-            'Anggrek Bulan',
-            'Tulip Belanda',
-            'Bunga Matahari',
-            'Lily Putih',
-            'Melati Wangi',
-            'Bougenville',
-            'Sakura Pink',
-            'Lavender',
-            'Kamboja',
-            'Edelweiss',
-            'Aster Ungu',
-            'Krisan Kuning',
-            'Sedap Malam',
-            'Teratai',
-            'Dahlia',
-            'Peony'
+
+
+        Schema::disableForeignKeyConstraints();
+
+        // 2. KOSONGKAN TABEL DULU (Agar tidak error Duplicate Entry)
+        DB::table('voucher')->truncate();
+
+        // 3. Nyalakan lagi cek Foreign Key
+        Schema::enableForeignKeyConstraints();
+
+        $vouchers = [
+            // 1. Voucher Potongan Tetap (Rp 10.000)
+            // Skenario: Belanja minimal 50rb, dapet diskon 10rb
+            [
+                'kode' => 'ZIZIHEMAT',
+                'tipe' => 'fixed', // Sesuai enum migrasi
+                'nilai' => 10000,
+                'minimal_pembelian' => 50000,
+                'tanggal_mulai' => Carbon::now()->subDays(1)->toDateString(),
+                'tanggal_selesai' => Carbon::now()->addMonths(1)->toDateString(),
+                'is_active' => true,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+
+            // 2. Voucher Persen (Diskon 50%)
+            // Skenario: Diskon setengah harga tanpa minimal pembelian
+            [
+                'kode' => 'DISKON50',
+                'tipe' => 'percent', // Sesuai enum migrasi
+                'nilai' => 50, // Artinya 50%
+                'minimal_pembelian' => 0,
+                'tanggal_mulai' => Carbon::now()->subDays(1)->toDateString(),
+                'tanggal_selesai' => Carbon::now()->addMonths(1)->toDateString(),
+                'is_active' => true,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+
+            // 3. Voucher Sultan (Min Belanja Tinggi)
+            // Skenario: Tes validasi minimal pembelian (Harus belanja 1 juta)
+            [
+                'kode' => 'SULTAN100',
+                'tipe' => 'fixed',
+                'nilai' => 100000, // Potongan 100rb
+                'minimal_pembelian' => 1000000, // Min belanja 1 Juta
+                'tanggal_mulai' => Carbon::now()->subDays(1)->toDateString(),
+                'tanggal_selesai' => Carbon::now()->addMonths(3)->toDateString(),
+                'is_active' => true,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+
+            // 4. Voucher Kadaluarsa (Sudah Lewat)
+            // Skenario: Tes validasi tanggal (Harus Gagal)
+            [
+                'kode' => 'KADALUARSA',
+                'tipe' => 'fixed',
+                'nilai' => 20000,
+                'minimal_pembelian' => 0,
+                'tanggal_mulai' => Carbon::now()->subMonths(2)->toDateString(),
+                'tanggal_selesai' => Carbon::now()->subDays(1)->toDateString(), // Kemarin sudah habis
+                'is_active' => true,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+
+            // 5. Voucher Non-Aktif
+            // Skenario: Tes validasi is_active (Harus Gagal)
+            [
+                'kode' => 'OFFLIMIT',
+                'tipe' => 'percent',
+                'nilai' => 10,
+                'minimal_pembelian' => 0,
+                'tanggal_mulai' => Carbon::now()->subDays(1)->toDateString(),
+                'tanggal_selesai' => Carbon::now()->addMonths(1)->toDateString(),
+                'is_active' => false, // Dimatikan admin
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
         ];
 
-        for ($i = 1; $i <= 30; $i++) {
-
-            // Pakai helper fake() -> Tidak perlu use Faker\Factory lagi
-            $namaBunga = fake('id_ID')->randomElement($flowerNames);
-            $sifat     = fake('id_ID')->word();
-            $namaProduk = $namaBunga . ' ' . ucfirst($sifat);
-
-            Produk::create([
-                'nama_produk' => $namaProduk,
-                'slug'        => Str::slug($namaProduk),
-
-                // Deskripsi paragraf
-                'deskripsi'   => '<p>' . fake('id_ID')->paragraph(3) . '</p>',
-
-                // Harga 50rb - 1jt
-                'harga'       => fake()->numberBetween(50000, 1000000),
-
-                // Stok 1 - 100
-                'stok'        => fake()->numberBetween(1, 100),
-
-                // Terjual 0 - 500
-                'terjual'     => fake()->numberBetween(0, 500),
-
-                // Foto null
-                'foto'        => null,
-            ]);
-
-            Schema::disableForeignKeyConstraints();
-
-            // 2. KOSONGKAN TABEL DULU (Agar tidak error Duplicate Entry)
-            DB::table('voucher')->truncate();
-
-            // 3. Nyalakan lagi cek Foreign Key
-            Schema::enableForeignKeyConstraints();
-
-            $vouchers = [
-                // 1. Voucher Potongan Tetap (Rp 10.000)
-                // Skenario: Belanja minimal 50rb, dapet diskon 10rb
-                [
-                    'kode' => 'ZIZIHEMAT',
-                    'tipe' => 'fixed', // Sesuai enum migrasi
-                    'nilai' => 10000,
-                    'minimal_pembelian' => 50000,
-                    'tanggal_mulai' => Carbon::now()->subDays(1)->toDateString(),
-                    'tanggal_selesai' => Carbon::now()->addMonths(1)->toDateString(),
-                    'is_active' => true,
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
-                ],
-
-                // 2. Voucher Persen (Diskon 50%)
-                // Skenario: Diskon setengah harga tanpa minimal pembelian
-                [
-                    'kode' => 'DISKON50',
-                    'tipe' => 'percent', // Sesuai enum migrasi
-                    'nilai' => 50, // Artinya 50%
-                    'minimal_pembelian' => 0,
-                    'tanggal_mulai' => Carbon::now()->subDays(1)->toDateString(),
-                    'tanggal_selesai' => Carbon::now()->addMonths(1)->toDateString(),
-                    'is_active' => true,
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
-                ],
-
-                // 3. Voucher Sultan (Min Belanja Tinggi)
-                // Skenario: Tes validasi minimal pembelian (Harus belanja 1 juta)
-                [
-                    'kode' => 'SULTAN100',
-                    'tipe' => 'fixed',
-                    'nilai' => 100000, // Potongan 100rb
-                    'minimal_pembelian' => 1000000, // Min belanja 1 Juta
-                    'tanggal_mulai' => Carbon::now()->subDays(1)->toDateString(),
-                    'tanggal_selesai' => Carbon::now()->addMonths(3)->toDateString(),
-                    'is_active' => true,
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
-                ],
-
-                // 4. Voucher Kadaluarsa (Sudah Lewat)
-                // Skenario: Tes validasi tanggal (Harus Gagal)
-                [
-                    'kode' => 'KADALUARSA',
-                    'tipe' => 'fixed',
-                    'nilai' => 20000,
-                    'minimal_pembelian' => 0,
-                    'tanggal_mulai' => Carbon::now()->subMonths(2)->toDateString(),
-                    'tanggal_selesai' => Carbon::now()->subDays(1)->toDateString(), // Kemarin sudah habis
-                    'is_active' => true,
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
-                ],
-
-                // 5. Voucher Non-Aktif
-                // Skenario: Tes validasi is_active (Harus Gagal)
-                [
-                    'kode' => 'OFFLIMIT',
-                    'tipe' => 'percent',
-                    'nilai' => 10,
-                    'minimal_pembelian' => 0,
-                    'tanggal_mulai' => Carbon::now()->subDays(1)->toDateString(),
-                    'tanggal_selesai' => Carbon::now()->addMonths(1)->toDateString(),
-                    'is_active' => false, // Dimatikan admin
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
-                ],
-            ];
-
-            DB::table('voucher')->insert($vouchers);
-        }
+        DB::table('voucher')->insert($vouchers);
     }
 }

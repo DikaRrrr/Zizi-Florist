@@ -14,14 +14,10 @@ return new class extends Migration
         Schema::create('pembayaran', function (Blueprint $table) {
             $table->id();
             $table->foreignId('pesanan_id')->constrained('pesanan')->onDelete('cascade');
-
-            $table->string('metode_pembayaran'); // 'transfer_bca', 'transfer_mandiri', 'midtrans', etc
+            $table->string('metode_pembayaran');
             $table->integer('jumlah');
-
-            // Khusus Transfer Manual
-            $table->string('bukti_bayar')->nullable(); // Foto struk
-            $table->string('nama_akun_bank')->nullable(); // Nama pengirim
-
+            $table->string('bukti_bayar')->nullable(); 
+            $table->string('nama_akun_bank')->nullable(); 
             $table->enum('status', ['diproses', 'berhasil', 'gagal'])->default('diproses');
             $table->timestamp('waktu_bayar')->nullable();
 

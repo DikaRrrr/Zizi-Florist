@@ -66,7 +66,7 @@
                             {{-- GAMBAR PRODUK --}}
                             {{-- Kita ambil gambar dari item pertama sebagai cover --}}
                             @if ($order->detail->first())
-                                <img src="{{ asset('storage/' . $order->detail->first()->produk->gambar) }}"
+                                <img src="{{ asset('storage/' . $order->detail->first()->produk->foto) }}"
                                     alt="{{ $order->detail->first()->produk->nama_produk }}" class="order-item-image" />
                             @else
                                 {{-- Gambar placeholder jika error --}}

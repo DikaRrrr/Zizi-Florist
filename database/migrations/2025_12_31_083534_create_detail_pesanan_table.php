@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('pesanan_id')->constrained('pesanan')->onDelete('cascade');
             $table->foreignId('produk_id')->constrained('produk')->onDelete('cascade');
             $table->integer('quantity');
-            $table->integer('harga'); // Harga per item saat dibeli (PENTING: simpan harga saat transaksi terjadi)
+            $table->integer('harga'); 
             $table->timestamps();
         });
     }

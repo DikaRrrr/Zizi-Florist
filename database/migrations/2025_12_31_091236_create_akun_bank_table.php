@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('akun_bank', function (Blueprint $table) {
             $table->id();
-            $table->string('bank');      // Nama Bank (Contoh: BCA)
-            $table->string('no_rekening'); // Nomor Rekening (Contoh: 1234567890)
-            $table->string('atas_nama'); // Atas Nama (Contoh: Zizi Florist)
-            $table->boolean('is_active')->default(true); // Biar bisa disembunyikan kalau rekening mati
+            $table->string('bank');      
+            $table->string('no_rekening'); 
+            $table->string('atas_nama'); 
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

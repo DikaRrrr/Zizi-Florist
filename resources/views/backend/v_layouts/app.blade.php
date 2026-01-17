@@ -117,33 +117,88 @@
                             <span class="pc-mtext">Buat Voucher</span>
                         </a>
                     </li>
+                    <li class="pc-item {{ request()->routeIs('admin.rating.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.rating.index') }}" class="pc-link">
+                            <span class="pc-micon">
+                                <i class="ti ti-star"></i>
+                            </span>
+                            <span class="pc-mtext">Kelola Rating</span>
+                        </a>
+                    </li>
                     <li class="pc-item {{ request()->routeIs('admin.user.*') ? 'active' : '' }}">
                         <a href="{{ route('admin.user.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-user"></i></span>
                             <span class="pc-mtext">Manajemen User</span>
                         </a>
-                        </li>
-                        <li class="sidebar-item {{ request()->routeIs('admin.rekening.*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.rekening.index') }}" class="pc-link">
-                                <span class="pc-micon"><i class="ti ti-wallet"></i></span>
-                                <span class="pc-mtext">Rekening Bank</span>
-                            </a>
-                        </li>
-                        <li class="pc-item">
-                            <a href="#" class="pc-link">
-                                <span class="pc-micon"><i class="ti ti-printer"></i></span>
-                                <span class="pc-mtext">Cetak Laporan</span>
-                            </a>
-                        </li>
-                        <li class="pc-item">
-                            <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                                @csrf
-                                <a href="#" onclick="this.closest('form').submit()" class="pc-link">
-                                    <span class="pc-micon"><i class="ti ti-power"></i></span>
-                                    <span class="pc-mtext">Logout</span>
+                    </li>
+                    <li class="sidebar-item {{ request()->routeIs('admin.rekening.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.rekening.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-wallet"></i></span>
+                            <span class="pc-mtext">Rekening Bank</span>
+                        </a>
+                    </li>
+                    {{-- MENU LAPORAN (DROPDOWN) --}}
+                    {{-- Class 'pc-hasmenu' membuat tanda panah di kanan --}}
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link">
+                            <span class="pc-micon">
+                                <i class="ti ti-files"></i> {{-- Icon Berkas --}}
+                            </span>
+                            <span class="pc-mtext">Laporan</span>
+                            <span class="pc-arrow"><i class="ti ti-chevron-right"></i></span>
+                        </a>
+
+                        {{-- SUBMENU --}}
+                        {{-- SUBMENU: LAPORAN --}}
+                        {{-- Style background-color membuat area submenu sedikit lebih gelap --}}
+                        <ul class="pc-submenu" style="background-color: rgba(0, 0, 0, 0.05);">
+
+                            {{-- 1. Laporan Pesanan --}}
+                            <li class="pc-item {{ request()->routeIs('admin.pesanan.formcetak') ? 'active' : '' }}">
+                                <a class="pc-link" href="{{ route('admin.pesanan.formcetak') }}">
+                                    <i class="ti ti-truck-delivery me-2"></i> Laporan Pesanan
                                 </a>
-                            </form>
-                        </li>
+                            </li>
+
+                            {{-- 2. Laporan Produk --}}
+                            <li class="pc-item {{ request()->routeIs('admin.produk.formcetak') ? 'active' : '' }}">
+                                <a class="pc-link" href="{{ route('admin.produk.formcetak') }}">
+                                    <i class="ti ti-package me-2"></i> Laporan Produk
+                                </a>
+                            </li>
+
+                            {{-- 3. Laporan User --}}
+                            <li class="pc-item {{ request()->routeIs('admin.user.formcetak') ? 'active' : '' }}">
+                                <a class="pc-link" href="{{ route('admin.user.formcetak') }}">
+                                    <i class="ti ti-users me-2"></i> Laporan User
+                                </a>
+                            </li>
+
+                            {{-- 4. Laporan Voucher --}}
+                            <li class="pc-item {{ request()->routeIs('admin.voucher.formcetak') ? 'active' : '' }}">
+                                <a class="pc-link" href="{{ route('admin.voucher.formcetak') }}">
+                                    <i class="ti ti-ticket me-2"></i> Laporan Voucher
+                                </a>
+                            </li>
+
+                            {{-- 5. Laporan Rating --}}
+                            <li class="pc-item {{ request()->routeIs('admin.rating.formcetak') ? 'active' : '' }}">
+                                <a class="pc-link" href="{{ route('admin.rating.formcetak') }}">
+                                    <i class="ti ti-star me-2"></i> Laporan Rating
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+                    <li class="pc-item">
+                        <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                            @csrf
+                            <a href="#" onclick="this.closest('form').submit()" class="pc-link">
+                                <span class="pc-micon"><i class="ti ti-power"></i></span>
+                                <span class="pc-mtext">Logout</span>
+                            </a>
+                        </form>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -157,11 +212,9 @@
                     {{-- 1. TOMBOL KE FRONTEND (BARU) --}}
                     {{-- ================================================== --}}
                     <li class="pc-h-item">
-                        {{-- Tambahkan class 'd-flex align-items-center' agar icon dan teks sejajar vertikal --}}
                         <a class=" me-0 d-flex align-items-center" href="{{ route('frontend.beranda') }}"
                             target="_blank" title="Lihat Toko">
 
-                            {{-- Teks Website --}}
                             <span class="d-none d-sm-inline ms-2 fw-bold" style="font-size: 14px;">Lihat Toko</span>
                         </a>
                     </li>
@@ -249,7 +302,6 @@
 
     <script>
         // 1. CEK NOTIFIKASI SUKSES DARI CONTROLLER
-        // Kodingan ini akan ngecek: "Apakah ada session bernama 'success'?"
         @if (session('success'))
             Swal.fire({
                 icon: 'success',
@@ -261,11 +313,10 @@
         @endif
 
         // 2. KONFIRMASI HAPUS (DELETE)
-        // Kodingan ini menunggu user klik tombol dengan class ".show_confirm"
         $(document).ready(function() {
             $('.show_confirm').click(function(event) {
-                var form = $(this).closest("form"); // Ambil form terdekat
-                event.preventDefault(); // Cegah form langsung kirim
+                var form = $(this).closest("form"); 
+                event.preventDefault(); 
 
                 Swal.fire({
                     title: 'Yakin mau dihapus?',
@@ -278,7 +329,7 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        form.submit(); // Kirim form jika user klik Ya
+                        form.submit(); 
                     }
                 });
             });

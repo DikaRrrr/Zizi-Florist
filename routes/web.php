@@ -6,7 +6,7 @@ use App\Models\Pembayaran;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BackEnd\UserController;
-use App\Http\Controllers\BackEnd\LaporanController;
+use App\Http\Controllers\Backend\RatingController;
 use App\Http\Controllers\Frontend\ProdukController;
 use App\Http\Controllers\BackEnd\AkunBankController;
 use App\Http\Controllers\FrontEnd\BerandaController;
@@ -50,31 +50,37 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.update.avatar');
 });
 
-// 1. Register (Daftar Akun)
+// 1. Register
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
 
-// 2. Login (Masuk)
+// 2. Login
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 
-// 3. Logout (Keluar) - Harus POST demi keamanan
+// 3. Logout (Keluar)
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Grup Route dengan pengaman (auth & admin)
 
 // Dashboard Admin
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/dashboard', [AdminBeranda::class, 'index'])->name('dashboard');
+    Route::get('produk/form-cetak', [AdminProduk::class, 'formcetak'])->name('produk.formcetak');
+    Route::post('produk/cetak-laporan', [AdminProduk::class, 'cetak'])->name('produk.cetak');
     Route::resource('produk', AdminProduk::class);
+    Route::get('pesanan/form-cetak', [AdminPesanan::class, 'formCetak'])->name('pesanan.formcetak');
+    Route::post('pesanan/cetak-laporan', [AdminPesanan::class, 'cetak'])->name('pesanan.cetak');
     Route::resource('pesanan', AdminPesanan::class)->only(['index', 'show', 'destroy', 'update']);
+    Route::get('voucher/form-cetak', [AdminVoucher::class, 'formCetak'])->name('voucher.formcetak');
+    Route::post('voucher/cetak-laporan', [AdminVoucher::class, 'cetak'])->name('voucher.cetak');
     Route::resource('voucher', AdminVoucher::class);
     Route::resource('rekening', AkunBankController::class)->only(['index', 'store', 'destroy']);
+    Route::get('user/form-cetak', [UserController::class, 'formCetak'])->name('user.formcetak');
+    Route::post('user/cetak-laporan', [UserController::class, 'cetak'])->name('user.cetak');
     Route::resource('user', UserController::class);
-    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
-    Route::post('/laporan/cetak', [LaporanController::class, 'cetak'])->name('laporan.cetak'); // Untuk aksi print
-
-    // Route lain nanti menyusul...
+    Route::get('rating/form-cetak', [RatingController::class, 'formCetak'])->name('rating.formcetak');
+    Route::post('rating/cetak-laporan', [RatingController::class, 'cetak'])->name('rating.cetak');
+    Route::resource('rating', RatingController::class)->only(['index']);
 });

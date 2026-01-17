@@ -20,7 +20,6 @@
                     {{-- ALERT SELAMAT DATANG --}}
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <h4 class="alert-heading">
-                            {{-- Saya ubah 'nama' jadi 'name' (standar Laravel). Kembalikan ke 'nama' jika kolom DB kamu memang 'nama' --}}
                             Selamat Datang, {{ Auth::user()->name ?? Auth::user()->nama }}
                         </h4>
 

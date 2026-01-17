@@ -45,7 +45,6 @@
                                 {{-- Deskripsi (DENGAN CKEDITOR) --}}
                                 <div class="form-group mb-3">
                                     <label class="form-label">Deskripsi</label>
-                                    {{-- Perhatikan ID="ckeditor" disini --}}
                                     <textarea name="deskripsi" id="ckeditor" class="form-control @error('deskripsi') is-invalid @enderror">{{ old('deskripsi') }}</textarea>
                                     @error('deskripsi')
                                         <span class="invalid-feedback" role="alert">{{ $message }}</span>
@@ -94,7 +93,6 @@
     </div>
 
     {{-- SCRIPT JAVASCRIPT --}}
-    {{-- 1. Load Library CKEditor dari CDN --}}
     <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
 
     <script>

@@ -5,11 +5,10 @@
         <div class="col-12">
             <div class="card">
                 {{-- Form Update --}}
-                {{-- Perhatikan route mengarah ke 'update' dan membawa ID --}}
                 <form class="form-horizontal" action="{{ route('admin.produk.update', $edit->id) }}" method="post"
                     enctype="multipart/form-data">
                     @csrf
-                    @method('PUT') {{-- WAJIB: Mengubah method POST menjadi PUT untuk update --}}
+                    @method('PUT')
 
                     <div class="card-body">
                         <h4 class="card-title mb-4">{{ $judul ?? 'Ubah Produk' }}</h4>
@@ -22,7 +21,6 @@
                                     <label class="form-label">Foto Produk</label>
 
                                     {{-- Preview Gambar --}}
-                                    {{-- Logika: Jika ada foto di DB, tampilkan. Jika tidak, tampilkan placeholder/kosong --}}
                                     @if ($edit->foto)
                                         <img src="{{ asset('storage/' . $edit->foto) }}"
                                             class="img-preview img-fluid mb-3 col-sm-5 d-block"

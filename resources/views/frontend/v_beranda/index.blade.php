@@ -1,4 +1,8 @@
-@extends('frontend.v_layouts.app') @section('content')
+@extends('frontend.v_layouts.app')
+
+@section('content')
+
+    {{-- 1. HERO SECTION --}}
     <section class="hero">
         <div class="hero-text">
             <h1>
@@ -12,37 +16,93 @@
     </section>
 
     <main class="desktop-content" id="desktop-content">
+
+        {{-- 2. WELCOME & SEARCH BAR --}}
         <section class="welcome-bar">
             <div class="welcome-text">
                 <h1>Selamat Datang di ZIZI FLORIST</h1>
             </div>
 
-            {{-- GANTI DIV LAMA DENGAN FORM INI --}}
-            {{-- Perhatikan bagian action --}}
             <form action="{{ route('produk.search') }}#hasil-pencarian" method="GET"
                 class="search-bar-container welcome-search">
-
                 <input type="text" name="keyword" placeholder="Cari bunga..." class="search-input"
                     value="{{ request('keyword') }}" />
-
                 <button type="submit" class="search-button">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
             </form>
         </section>
 
+        @if (isset($promo) && $promo->count() > 0)
+            <section class="container my-5">
+                <div class="d-flex align-items-center mb-3 justify-content-center">
+                    <i class="fa-solid fa-ticket fs-2 text-warning me-2"></i>
+                    <h2 class="section-title mb-0">Voucher Spesial Hari Ini!</h2>
+                </div>
+
+                <div class="row justify-content-center">
+                    @foreach ($promo as $v)
+                        <div class="col-md-4 col-sm-6 mb-3">
+                            {{-- Style Card Voucher --}}
+                            <div class="card h-100 shadow-sm"
+                                style="border: 2px dashed #ff96ac; background-color: #fff5f7;">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start">
+
+                                        {{-- Info Diskon --}}
+                                        <div>
+                                            <h5 class="fw-bold text-danger mb-1">
+                                                @if ($v->tipe == 'percent')
+                                                    Diskon {{ $v->nilai }}%
+                                                @else
+                                                    Potongan Rp {{ number_format($v->nilai, 0, ',', '.') }}
+                                                @endif
+                                            </h5>
+                                            <p class="mb-1 text-dark" style="font-size: 0.9rem;">
+                                                Min. Belanja: <strong>Rp
+                                                    {{ number_format($v->minimal_pembelian, 0, ',', '.') }}</strong>
+                                            </p>
+                                            <small class="text-muted" style="font-size: 0.75rem;">
+                                                <i class="fa-regular fa-clock"></i> Berlaku s/d
+                                                {{ \Carbon\Carbon::parse($v->tanggal_selesai)->format('d M Y') }}
+                                            </small>
+                                        </div>
+
+                                        {{-- Kode & Tombol --}}
+                                        <div class="text-end">
+                                            <div class="bg-white border border-danger text-danger px-2 py-1 rounded fw-bold mb-2 text-center"
+                                                style="font-family: monospace; font-size: 1.1rem;">
+                                                {{ $v->kode }}
+                                            </div>
+                                            <button class="btn btn-sm btn-danger w-100"
+                                                onclick="copyVoucher('{{ $v->kode }}')">
+                                                <i class="fa-regular fa-copy"></i> Salin
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
+        @endif
+        {{-- AKHIR SECTION VOUCHER --}}
+
+        {{-- 4. BEST SELLER SECTION --}}
         <section class="bestseller-section">
             <h2 class="section-title">Best Seller 🔥</h2>
 
             <div class="bestseller-carousel">
-                {{-- PERBAIKAN: Ganti 'as $produk' menjadi 'as $item' --}}
-                {{-- Agar tidak bentrok dengan variabel $produk utama di bawah --}}
                 @foreach ($best_sellers as $item)
                     <div class="bestseller-item">
+                        @php
+                            $rataRata = $item->rating->avg('rating') ?? 0;
+                            $jumlahUlasan = $item->rating->count();
+                        @endphp
 
-                        {{-- Gunakan $item->slug, bukan $produk->slug --}}
-                        <a href="{{ route('produk.detail', $item->slug) }}" style="text-decoration: none; color: inherit;">
-
+                        <a href="{{ route('produk.detail', $item->id) }}" style="text-decoration: none; color: inherit;">
                             {{-- GAMBAR --}}
                             @if ($item->foto)
                                 <img src="{{ asset('storage/' . $item->foto) }}" alt="{{ $item->nama_produk }}"
@@ -53,13 +113,15 @@
                             @endif
 
                             <div class="bestseller-details">
-                                {{-- NAMA --}}
                                 <span class="product-name">{{ $item->nama_produk }}</span>
-
-                                {{-- DETAIL LAIN --}}
                                 <small style="display:block; font-size: 0.8rem; color: #888;">
                                     Terjual: {{ $item->terjual }}
                                 </small>
+
+                                {{-- Rating di Best Seller (Opsional) --}}
+                                <div class="text-warning small mt-1">
+                                    <i class="fa-solid fa-star"></i> {{ number_format($rataRata, 1) }}
+                                </div>
                             </div>
                         </a>
                     </div>
@@ -67,111 +129,108 @@
             </div>
         </section>
 
+        {{-- 5. PRODUCT LIST SECTION --}}
         <section class="product-list-section" id="hasil-pencarian">
-            <div class="product-grid">
 
-                {{-- MULAI LOOPING DATA DARI DATABASE --}}
+            {{-- Grid Produk --}}
+            <div class="product-grid">
                 @foreach ($produk as $row)
-                    {{-- Link menuju detail (Untuk sementara hash # dulu, nanti bisa diganti route detail) --}}
+                    @php
+                        // Hitung rating untuk setiap produk di list utama
+                        $rataRataUtama = $row->rating->avg('rating') ?? 0;
+                        $jumlahUlasanUtama = $row->rating->count();
+                    @endphp
+
                     <a href="{{ route('produk.detail', $row->id) }}">
                         <div class="product-card">
 
-                            {{-- 1. FOTO PRODUK --}}
-                            {{-- Cek apakah foto ada di database & file fisik ada --}}
+                            {{-- FOTO --}}
                             @if ($row->foto)
                                 <img src="{{ asset('storage/' . $row->foto) }}" alt="{{ $row->nama_produk }}"
                                     class="product-image">
                             @else
-                                {{-- Gambar default jika tidak ada foto --}}
                                 <img src="https://placehold.co/300x300?text=No+Image" alt="No Image" class="product-image">
                             @endif
 
                             <div class="product-info">
-
                                 <div class="product-header-line">
-                                    {{-- 2. NAMA PRODUK --}}
                                     <span class="product-name">{{ $row->nama_produk }}</span>
 
-                                    {{-- Rating (Sementara Statis karena belum ada kolom rating di DB) --}}
-                                    <span class="rating">
-                                        <i class="fa-solid fa-star" style="color: #FFD43B;"></i> 5
+                                    {{-- RATING DINAMIS --}}
+                                    <span class="rating text-warning">
+                                        <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
+                                        <span class="fw-bold text-dark">{{ number_format($rataRataUtama, 1) }}</span>
                                     </span>
                                 </div>
 
                                 <div class="price-sold-line">
-                                    {{-- 3. HARGA (Format Rupiah) --}}
                                     <span class="price">Rp. {{ number_format($row->harga, 0, ',', '.') }}</span>
-
-                                    {{-- 4. JUMLAH TERJUAL --}}
                                     <span class="sold-count">{{ $row->terjual }} Sold</span>
                                 </div>
-
                             </div>
                         </div>
                     </a>
                 @endforeach
-                {{-- SELESAI LOOPING --}}
-
-                {{-- Jika tidak ada produk sama sekali --}}
-                @if ($produk->isEmpty())
-                    <div class="cart-empty-state" style="text-align: center; margin-top: auto;">
-                        <i class="fa-solid fa-box-open empty-icon"
-                            style="font-size: 5rem; color: #ff96ac; margin-bottom: 20px;"></i>
-                        <p class="empty-message">Tidak ada produk.</p>
-                    </div>
-                @endif
-
             </div>
-            <section class="product-list-section">
-                <div class="product-grid">
+            {{-- Akhir Product Grid --}}
 
-                    {{-- LOOPING PRODUK --}}
-                    @foreach ($produk as $row)
-                        {{-- ... kode kartu produk kamu ... --}}
-                    @endforeach
-
-                </div> {{-- Penutup Grid --}}
-
-                {{-- TAMBAHKAN INI: TOMBOL PINDAH HALAMAN --}}
-                <div class="pagination-container mt-4">
-                    {{ $produk->appends(['keyword' => request('keyword')])->fragment('hasil-pencarian')->links('pagination::bootstrap-5') }}
+            {{-- EMPTY STATE (Jika Kosong) --}}
+            @if ($produk->isEmpty())
+                <div class="cart-empty-state" style="text-align: center; margin-top: 50px;">
+                    <i class="fa-solid fa-box-open empty-icon"
+                        style="font-size: 5rem; color: #ff96ac; margin-bottom: 20px;"></i>
+                    <p class="empty-message">Tidak ada produk ditemukan.</p>
                 </div>
+            @endif
 
-            </section>
+            {{-- PAGINATION --}}
+            <div class="pagination-container mt-4 d-flex justify-content-center">
+                {{ $produk->appends(['keyword' => request('keyword')])->fragment('hasil-pencarian')->links('pagination::bootstrap-5') }}
+            </div>
+
         </section>
+
     </main>
+
+    {{-- 6. JAVASCRIPT --}}
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
+        function copyVoucher(kode) {
+            navigator.clipboard.writeText(kode);
+            Swal.fire({
+                icon: 'success',
+                title: 'Kode Disalin!',
+                text: 'Kode ' + kode + ' siap digunakan saat checkout.',
+                timer: 2000,
+                showConfirmButton: false,
+                toast: true,
+                position: 'top-end'
+            });
+        }
+
         document.addEventListener("DOMContentLoaded", function() {
-            // 1. Definisikan daftar gambar latar belakang
             const heroImages = [
-                "{{ asset('img/hero-7.jpg') }}", // Hapus spasi di akhir sebelum tanda kutip tutup
+                "{{ asset('img/hero-7.jpg') }}",
                 "{{ asset('img/hero-1.jpg') }}",
                 "{{ asset('img/hero-2.jpg') }}",
             ];
 
             const heroElement = document.querySelector(".hero");
             let currentImageIndex = 0;
-            const intervalTime = 5000; // 10000 milidetik = 10 detik
+            const intervalTime = 5000;
 
-            // 2. Fungsi untuk mengganti gambar
             function changeBackgroundImage() {
-                // Pindah ke indeks berikutnya
                 currentImageIndex = (currentImageIndex + 1) % heroImages.length;
-
-                // Atur gambar latar belakang
                 heroElement.style.backgroundImage = `url(${heroImages[currentImageIndex]})`;
-
-                // Opsional: Tambahkan kelas untuk transisi yang mulus (jika transisi CSS ditambahkan)
                 heroElement.classList.add('fade-out');
                 setTimeout(() => {
                     heroElement.classList.remove('fade-out');
-                }, 500); // Sesuaikan dengan durasi transisi
+                }, 500);
             }
 
-            // 3. Atur gambar awal
             heroElement.style.backgroundImage = `url(${heroImages[currentImageIndex]})`;
-
-            // 4. Atur interval untuk memanggil fungsi secara berkala
             setInterval(changeBackgroundImage, intervalTime);
         });
     </script>

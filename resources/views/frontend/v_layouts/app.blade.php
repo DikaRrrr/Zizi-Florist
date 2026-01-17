@@ -79,11 +79,13 @@
     <footer class="desktop-footer">
         <div class="footer-container">
             <div class="footer-section brand-info">
-                <h3>Bloomscape</h3>
-                <p>Spesialis penyedia tanaman hias dan bunga segar berkualitas premium untuk memperindah ruang Anda.</p>
+                <h3>Zizi Florist</h3>
+                <p>Florist andalan di Bogor (Area Dramaga & IPB). Kami menyediakan berbagai jenis buket cantik untuk
+                    Wisuda, Ulang Tahun, dan Anniversary. Dibuat dengan cinta, dikirim dengan sepenuh hati. Biarkan
+                    bunga kami yang berbicara untuk momen spesialmu. ✨</p>
                 <div class="social-links">
-                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/zizi_florist13?igsh=MWhidjlha3Vwd2l0MQ==" target="_blank"><i
+                            class="fa-brands fa-instagram"></i></a>
                     <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
                 </div>
             </div>
@@ -91,22 +93,17 @@
             <div class="footer-section contact-info">
                 <h3>Kontak Kami <i class="fa-solid fa-phone"></i></h3>
                 <ul>
-                    <li><strong>Telepon:</strong> (021) 123-4567</li>
-                    <li><strong>WhatsApp:</strong> +62 812 3456 7890</li>
-                    <li><strong>Email:</strong> info@bloomscape.com</li>
-                    <li><strong>Jam Kerja:</strong> Sen-Jum, 09:00 - 18:00 WIB</li>
+                    <li><strong>Telepon:</strong> +62 896-6387-9200</li>
+                    <li><strong>Email:</strong> ziziflorist@gmail.com</li>
+                    <li><strong>Jam Kerja:</strong> Setiap Hari, 08:00 - 17:00 WIB</li>
                 </ul>
             </div>
 
             <div class="footer-section location-info">
                 <h3>Alamat Toko <i class="fa-solid fa-location-dot"></i></h3>
                 <p>
-                    Jl. Kebun Raya No. 10, <br />
-                    Kecamatan Mekar, Kota Bunga,<br />
-                    12345, Indonesia.
-                </p>
-                <p>
-                    <a href="#">Lihat di Google Maps</a>
+                    Kampus dalam IPB, <br>
+                    Dramaga-Bogor
                 </p>
             </div>
         </div>

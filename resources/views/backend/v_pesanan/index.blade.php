@@ -7,16 +7,19 @@
             {{-- Header & Tombol Aksi --}}
             <div class="card mb-4">
                 <div class="card-body d-flex justify-content-between align-items-center">
-                    <ul class="breadcrumb">
+
+                    {{-- BAGIAN KIRI: Breadcrumb --}}
+                    <ul class="breadcrumb mb-0">
                         <li class="breadcrumb-item">Dashboard</li>
-                        <li class="breadcrumb-item" aria-current="page">Pesanan Masuk</li>
+                        <li class="breadcrumb-item active" aria-current="page">Pesanan Masuk</li>
                     </ul>
 
-                    {{-- Tombol Export (Biasanya pesanan tidak ditambah manual, tapi di-export laporannya) --}}
-                    {{-- Kamu bisa ubah link ini ke route cetak laporan atau hapus jika tidak perlu --}}
-                    <a href="#" class="btn btn-success">
-                        <i class="ti ti-file-spreadsheet"></i> Export Excel
+                    {{-- BAGIAN KANAN: Tombol Cetak --}}
+                    {{-- Pastikan route ini sudah dibuat di web.php --}}
+                    <a href="{{ route('admin.pesanan.formcetak') }}" class="btn btn-success">
+                        <i class="ti ti-printer me-2"></i> Cetak Laporan
                     </a>
+
                 </div>
             </div>
 

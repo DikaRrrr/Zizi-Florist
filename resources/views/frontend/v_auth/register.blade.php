@@ -14,10 +14,11 @@
                     {{-- 1. NAMA LENGKAP --}}
                     <div class="mb-3">
                         <div class="input-group">
-                            <input class="login-input" type="text" name="nama" placeholder="Masukkan Nama Lengkap"
-                                value="{{ old('nama') }}" required>
+                            {{-- Tambahkan class 'form-control' agar is-invalid (merah) berfungsi --}}
+                            <input type="text" name="nama"
+                                class="form-control login-input @error('nama') is-invalid @enderror"
+                                placeholder="Masukkan Nama Lengkap" value="{{ old('nama') }}" required>
                         </div>
-                        {{-- Error Message --}}
                         @error('nama')
                             <div class="invalid-feedback d-block text-start mt-1">
                                 <small>{{ $message }}</small>
@@ -28,8 +29,9 @@
                     {{-- 2. EMAIL --}}
                     <div class="mb-3">
                         <div class="input-group">
-                            <input class="login-input" type="email" name="email" placeholder="Masukkan Email"
-                                value="{{ old('email') }}" required>
+                            <input type="email" name="email"
+                                class="form-control login-input @error('email') is-invalid @enderror"
+                                placeholder="Masukkan Email" value="{{ old('email') }}" required>
                         </div>
                         @error('email')
                             <div class="invalid-feedback d-block text-start mt-1">
@@ -41,10 +43,9 @@
                     {{-- 3. ALAMAT --}}
                     <div class="mb-3">
                         <div class="input-group">
-                            {{-- Gunakan Textarea agar lebih enak input alamat panjang (Opsional) --}}
-                            {{-- Kalau mau input biasa, ubah jadi <input type="text"> --}}
-                            <input class="login-input" type="text" name="alamat" placeholder="Masukkan Alamat Lengkap"
-                                value="{{ old('alamat') }}" required>
+                            <input type="text" name="alamat"
+                                class="form-control login-input @error('alamat') is-invalid @enderror"
+                                placeholder="Masukkan Alamat Lengkap" value="{{ old('alamat') }}" required>
                         </div>
                         @error('alamat')
                             <div class="invalid-feedback d-block text-start mt-1">
@@ -56,9 +57,10 @@
                     {{-- 4. NOMOR HP --}}
                     <div class="mb-3">
                         <div class="input-group">
-                            {{-- Ganti type="number" jadi "text" agar angka 0 di depan tidak hilang --}}
-                            <input class="login-input" type="text" name="hp" placeholder="Masukkan Nomor Hp"
-                                value="{{ old('hp') }}" required>
+                            {{-- Gunakan type="text" atau "number" --}}
+                            <input type="number" name="hp"
+                                class="form-control login-input @error('hp') is-invalid @enderror"
+                                placeholder="Masukkan Nomor Hp (Contoh: 0812...)" value="{{ old('hp') }}" required>
                         </div>
                         @error('hp')
                             <div class="invalid-feedback d-block text-start mt-1">
@@ -71,12 +73,13 @@
                     <div class="mb-3">
                         <div class="input-group">
                             <input type="password" name="password" id="passwordInput"
-                                class="login-input form-control @error('password') is-invalid @enderror"
-                                placeholder="Masukkan Password" required>
+                                class="form-control login-input @error('password') is-invalid @enderror"
+                                placeholder="Masukkan Password (Min. 8 Karakter)" required>
 
-                            {{-- Tombol Mata (Toggle) --}}
+                            {{-- Tombol Mata --}}
                             <button class="btn btn-outline-secondary" type="button" id="togglePassword"
                                 style="border-color: #ccc;">
+                                {{-- Pastikan kamu sudah install FontAwesome --}}
                                 <i class="fa-solid fa-eye" id="iconEye"></i>
                             </button>
                         </div>

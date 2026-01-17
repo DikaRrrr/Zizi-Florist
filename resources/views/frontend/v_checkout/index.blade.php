@@ -21,10 +21,9 @@
                                 <small class="text-muted">Pastikan nama sesuai KTP untuk memudahkan kurir.</small>
                             </div>
 
-                            {{-- NOMOR HP (WAJIB ADA sesuai Model Pesanan) --}}
+                            {{-- NOMOR HP --}}
                             <div class="mb-3">
                                 <label class="form-label">Nomor HP / WhatsApp</label>
-                                {{-- Jika di tabel user ada kolom 'hp', ganti '' dengan Auth::user()->hp --}}
                                 <input type="text" name="hp_penerima" class="form-control"
                                     value="{{ Auth::user()->hp ?? '' }}" placeholder="Contoh: 08123456789" required>
                             </div>
